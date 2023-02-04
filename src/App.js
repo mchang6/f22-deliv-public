@@ -110,7 +110,7 @@ export default function App() {
 
     // ! Database query filters entries for current user. DO NOT CHANGE, editing this query may cause it to fail.
     const q = currentUser?.uid ? query(collection(db, "entries"), where("userid", "==", currentUser.uid)) : collection(db, "entries");
-
+    
     /* NOTE: onSnapshot allows the page to update automatically whenever there is 
     an update to the database. This means you do not have to manually update
     the page client-side after making an add/update/delete. The page will automatically

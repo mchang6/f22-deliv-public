@@ -37,7 +37,7 @@ export default function EntryModal({ entry, type, user }) {
    const [link, setLink] = useState(entry.link);
    const [description, setDescription] = useState(entry.description);
    const [category, setCategory] = React.useState(entry.category);
-   const [edit, setEdit] = useState(type === "edit"); // Milo
+   let saved = false;
 
    // Modal visibility handlers
 
@@ -49,7 +49,19 @@ export default function EntryModal({ entry, type, user }) {
       setCategory(entry.category);
    };
 
+   const changed = () => {
+      return !(entry.name == name && entry.link == link && entry.description == description && entry.category == category);
+   };
+
    const handleClose = () => {
+      if (changed() && !saved) {
+         if (window.confirm("You have unsaved changes. Are you sure you want to exit this entry? Unsaved changes will be discarded.")) {
+            setOpen(false);
+         } 
+         else {
+            return;
+         }
+      }
       setOpen(false);
    };
 
@@ -66,6 +78,7 @@ export default function EntryModal({ entry, type, user }) {
       };
 
       addEntry(newEntry).catch(console.error);
+      saved = true;
       handleClose();
    };
 
@@ -78,13 +91,19 @@ export default function EntryModal({ entry, type, user }) {
          category: category,
          userid: user?.uid,
       };
-      updateEntry(entry.id, updatedEntry).catch(console.error);
-      handleClose();
+      if (window.confirm("Are you sure you want to update this entry? This action cannot be undone.")) {
+         updateEntry(entry.id, updatedEntry).catch(console.error);
+         saved = true;
+         handleClose();
+      }
    };
 
-   const handleDelete = () => {
-      deleteEntry(entry.id).catch(console.error);
-      handleClose();
+   const handleDelete = () => { 
+      if (window.confirm("Are you sure you want to delete this entry? This action cannot be undone.")) {
+         deleteEntry(entry.id).catch(console.error);
+         saved = true;
+         handleClose();
+      }
    };
 
    // Button handlers for modal opening and inside-modal actions.
