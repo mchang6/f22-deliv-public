@@ -17,7 +17,6 @@ import { addEntry } from '../utils/mutations';
 import { updateEntry } from '../utils/mutations';
 import { deleteEntry } from '../utils/mutations';
 
-
 // Modal component for individual entries.
 
 /* EntryModal parameters:
@@ -130,7 +129,6 @@ export default function EntryModal({ entry, type, user }) {
                   variant="standard"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  //onClick={(event) => setName(event.target.value)}
                />
                <TextField
                   margin="normal"
