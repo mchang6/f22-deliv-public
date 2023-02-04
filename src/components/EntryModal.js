@@ -14,6 +14,9 @@ import * as React from 'react';
 import { useState } from 'react';
 import { categories } from '../utils/categories';
 import { addEntry } from '../utils/mutations';
+import { updateEntry } from '../utils/mutations';
+import { deleteEntry } from '../utils/mutations';
+
 
 // Modal component for individual entries.
 
@@ -35,6 +38,7 @@ export default function EntryModal({ entry, type, user }) {
    const [link, setLink] = useState(entry.link);
    const [description, setDescription] = useState(entry.description);
    const [category, setCategory] = React.useState(entry.category);
+   const [edit, setEdit] = useState(type === "edit"); // Milo
 
    // Modal visibility handlers
 
@@ -66,9 +70,23 @@ export default function EntryModal({ entry, type, user }) {
       handleClose();
    };
 
-   // TODO: Add Edit Mutation Handler
+   const handleEdit = () => {
+      const updatedEntry = {
+         name: name,
+         link: link,
+         description: description,
+         user: user?.displayName ? user?.displayName : "GenericUser",
+         category: category,
+         userid: user?.uid,
+      };
+      updateEntry(entry.id, updatedEntry).catch(console.error);
+      handleClose();
+   };
 
-   // TODO: Add Delete Mutation Handler
+   const handleDelete = () => {
+      deleteEntry(entry.id).catch(console.error);
+      handleClose();
+   };
 
    // Button handlers for modal opening and inside-modal actions.
    // These buttons are displayed conditionally based on if adding or editing/opening.
@@ -87,6 +105,8 @@ export default function EntryModal({ entry, type, user }) {
       type === "edit" ?
          <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
+            <Button variant="contained" onClick={handleEdit}>Save</Button>
          </DialogActions>
          : type === "add" ?
             <DialogActions>
@@ -110,6 +130,7 @@ export default function EntryModal({ entry, type, user }) {
                   variant="standard"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
+                  //onClick={(event) => setName(event.target.value)}
                />
                <TextField
                   margin="normal"
