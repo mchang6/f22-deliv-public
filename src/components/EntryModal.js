@@ -15,7 +15,9 @@ import { useState } from 'react';
 import { categories } from '../utils/categories';
 import { addEntry } from '../utils/mutations';
 import { updateEntry } from '../utils/mutations';
-import { deleteEntry } from '../utils/mutations';
+import { deleteEntry } from '../utils/mutations'
+//import ReactDOM from "react-dom";
+import QRCode from "react-qr-code";
 
 // Modal component for individual entries.
 
@@ -50,7 +52,7 @@ export default function EntryModal({ entry, type, user }) {
    };
 
    const changed = () => {
-      return !(entry.name == name && entry.link == link && entry.description == description && entry.category == category);
+      return !(entry.name === name && entry.link === link && entry.description === description && entry.category === category);
    };
 
    const handleClose = () => {
@@ -170,6 +172,9 @@ export default function EntryModal({ entry, type, user }) {
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
                />
+               <div className = "QRCode">
+                  {type === "edit" ? <center><QRCode value = {link}/></center> : null}
+               </div>
 
                <FormControl fullWidth sx={{ "margin-top": 20 }}>
                   <InputLabel id="demo-simple-select-label">Category</InputLabel>
